@@ -1,14 +1,14 @@
 import express from "express";
 import http from "http";
-import WebSocket from "ws";
+import { Server } from "socket.io";
 
 const app = express();
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, { cors: { origin: "*" } });
 
-wss.on("connection", (socket) => {
-  socket.send("hi");
+io.on("connection", (socket) => {
+  console.log("new connection from browser");
+  socket.on("test", (message) => console.log(message));
 });
-app.get("/api/test", (req, res) => res.send("hello"));
 
-server.listen(5000);
+httpServer.listen(5000);

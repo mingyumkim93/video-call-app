@@ -1,17 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-// import axios from "axios";
+import socket from "./socket";
 
 function App() {
-  const socket = new WebSocket(`ws://localhost:5000`);
-  socket.addEventListener("open", () => {
-    console.log("connected to server");
-  });
-  socket.addEventListener("message", (message) => {
-    console.log(message);
-  });
-  // axios.get("/api/test").then((res) => console.log(res));
+  useEffect(() => {
+    socket.emit("test", "test");
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
