@@ -1,16 +1,23 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Box, TextField, Button } from "@material-ui/core";
+import socket from "../socket";
+import { useHistory } from "react-router-dom";
 
-function Home() {
-  const [nickname, setNickname] = useState("");
+interface HomeProps {
+  nickname: string;
+  setNickname: React.Dispatch<React.SetStateAction<string>>;
+}
+function Home({ nickname, setNickname }: HomeProps) {
   const [roomName, setRoomName] = useState("");
+  const history = useHistory();
 
-  function handleCreate() {
-    console.log(nickname, roomName);
+  function validateInputs() {
+    return nickname.length > 0 && roomName.length > 0;
   }
 
   function handleJoin() {
-    console.log(nickname, roomName);
+    socket.emit("join_room", roomName);
+    history.push(`/${roomName}`);
   }
 
   return (
@@ -29,8 +36,9 @@ function Home() {
         value={roomName}
         onChange={(e) => setRoomName(e.target.value)}
       />
-      <Button onClick={handleCreate}>create</Button>
-      <Button onClick={handleJoin}>join</Button>
+      <Button onClick={handleJoin} disabled={!validateInputs()}>
+        join
+      </Button>
     </Box>
   );
 }

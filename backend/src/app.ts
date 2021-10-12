@@ -7,8 +7,11 @@ const httpServer = http.createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*" } });
 
 io.on("connection", (socket) => {
-  console.log("new connection from browser");
-  socket.on("test", (message) => console.log(message));
+  socket.on("join_room", (roomName) => {
+    socket.join(roomName);
+    console.log(socket.id + " joined room", roomName);
+    socket.to(roomName).emit("welcome");
+  });
 });
 
 httpServer.listen(5000);
